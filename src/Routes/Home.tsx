@@ -7,7 +7,7 @@ import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
   background-color: black;
-  padding-bottom: 200px;
+  /* padding-bottom: 200px; */
 `;
 
 const Loader = styled.div`
@@ -43,6 +43,7 @@ const Slider = styled.div`
 `;
 
 const Row = styled(motion.div)`
+  padding: 0px 60px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 5px;
@@ -51,11 +52,32 @@ const Row = styled(motion.div)`
 `;
 
 const Box = styled(motion.div)<{ bgPhoto: string }>`
-  height: 200px;
+  height: 300px;
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
+
+const boxTransition = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: {
+      duration: 0.3,
+      delay: 0.5,
+      type: "tween",
+    },
+  },
+};
 
 const rowVariants = {
   hidden: {
@@ -118,6 +140,10 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
+                      initial="normal"
+                      whileHover="hover"
+                      variants={boxTransition}
+                      transition={{ type: "tween" }}
                       bgPhoto={makeImagePath(movie.poster_path, "w500")}
                       key={movie.id}
                     />

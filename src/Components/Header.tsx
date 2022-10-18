@@ -107,7 +107,7 @@ const navVariants = {
     backgroundColor: "rgba(0,0,0,0)",
   },
   scroll: {
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: "rgba(0,0,0,0.9)",
   },
 };
 
