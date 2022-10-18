@@ -1,3 +1,5 @@
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResults } from "../api";
@@ -23,6 +25,7 @@ const Banner = styled.div<{ bgPhoto: string }>`
   padding: 60px;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
     url(${(props) => props.bgPhoto});
+  background-size: cover;
 `;
 
 const Overview = styled.p`
@@ -34,8 +37,39 @@ const Title = styled.h2`
   font-size: 68px;
   margin-bottom: 12px;
 `;
+const Slider = styled.div`
+  position: relative;
+`;
 
+const Row = styled(motion.div)<{ arrayLength: number }>`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.arrayLength}, 1fr);
+  gap: 10px;
+  position: absolute;
+  width: 100%;
+`;
+
+const Box = styled(motion.div)`
+  background-color: white;
+  height: 200px;
+`;
+
+const rowVariants = {
+  hidden: {
+    x: window.innerWidth + 10,
+  },
+  visible: {
+    x: 0,
+  },
+  exit: {
+    x: -window.innerWidth - 10,
+  },
+};
 function Home() {
+  const [click, setClick] = useState(0);
+  const onClick = () => {
+    setClick((prev) => prev + 1);
+  };
   const { data, isLoading } = useQuery<IGetMoviesResults>(
     ["movies", "nowPlaying"],
     getMovies
@@ -48,10 +82,30 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
+          <Banner
+            onClick={onClick}
+            bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}
+          >
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
+          <Slider>
+            <AnimatePresence>
+              <Row
+                arrayLength={data?.results.length!}
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 1 }}
+                key={click}
+              >
+                {data?.results.map((i) => (
+                  <Box key={i.id}>{i.id}</Box>
+                ))}
+              </Row>
+            </AnimatePresence>
+          </Slider>
         </>
       )}
     </Wrapper>
