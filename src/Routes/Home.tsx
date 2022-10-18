@@ -80,13 +80,38 @@ const Info = styled(motion.div)`
 `;
 
 const BigMovie = styled(motion.div)`
-  background-color: white;
   width: 40vw;
   height: 80vh;
   position: absolute;
   left: 0;
   right: 0;
   margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.black.darker};
+`;
+
+const BigCover = styled.div<{ bgPhoto: string }>`
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  height: 50%;
+`;
+
+const BigTitle = styled.h2`
+  color: ${(props) => props.theme.white.lighter};
+  top: -80px;
+  position: relative;
+  font-size: 30px;
+  padding: 20px;
+`;
+
+const BigOverview = styled.p`
+  color: ${(props) => props.theme.white.lighter};
+  top: -80px;
+  position: relative;
+  padding: 20px;
+  font-size: 20px;
 `;
 
 const Overlay = styled(motion.div)`
@@ -147,6 +172,9 @@ function Home() {
     ["movies", "nowPlaying"],
     getMovies
   );
+  const clickedMovie =
+    bigMovieMatch?.params.movieId &&
+    data?.results.find((movie) => +bigMovieMatch.params.movieId! === movie.id);
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -225,7 +253,26 @@ function Home() {
                   style={{
                     top: scrollY.get() + 100,
                   }}
-                ></BigMovie>
+                >
+                  {clickedMovie && (
+                    <>
+                      <BigCover
+                        bgPhoto={makeImagePath(
+                          clickedMovie.backdrop_path,
+                          "w500"
+                        )}
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedMovie.title}</BigTitle>
+                      <BigOverview>{clickedMovie.overview}</BigOverview>
+                    </>
+                  )}
+                </BigMovie>
               </>
             ) : null}
           </AnimatePresence>
