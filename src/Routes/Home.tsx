@@ -53,6 +53,7 @@ const Row = styled(motion.div)`
 `;
 
 const Box = styled(motion.div)<{ bgPhoto: string }>`
+  border-radius: 5px;
   cursor: pointer;
   height: 300px;
   background-image: url(${(props) => props.bgPhoto});
