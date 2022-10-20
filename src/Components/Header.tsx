@@ -153,6 +153,9 @@ function Header() {
     <Nav variants={navVariants} initial="top" animate={navAnimation}>
       <Col>
         <Logo
+          onClick={() => {
+            navigate("/");
+          }}
           variants={logoVariants}
           whileHover="active"
           animate="normal"

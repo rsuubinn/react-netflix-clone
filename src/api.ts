@@ -20,7 +20,7 @@ export interface IGetMoviesResults {
   total_results: number;
 }
 
-interface ISearch {
+export interface ISearch {
   backdrop_path: string;
   id: number;
   media_type: string;

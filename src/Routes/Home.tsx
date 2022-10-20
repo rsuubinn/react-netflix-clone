@@ -5,10 +5,11 @@ import styled from "styled-components";
 import { getMovies, IGetMoviesResults } from "../api";
 import { makeImagePath } from "../utils";
 import { useMatch, useNavigate } from "react-router-dom";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const Wrapper = styled.div`
   background-color: black;
-  /* padding-bottom: 200px; */
 `;
 
 const Loader = styled.div`
@@ -43,6 +44,46 @@ const Slider = styled.div`
   position: relative;
 `;
 
+const SliderTitle = styled.h2`
+  color: ${(props) => props.theme.white.lighter};
+  width: 100%;
+  padding: 5px 60px;
+  font-size: 30px;
+  font-weight: 600;
+`;
+
+const LeftButton = styled(motion.div)`
+  /* background-color: orange; */
+  z-index: -99;
+  cursor: pointer;
+  position: absolute;
+  width: 60px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    color: white;
+    font-size: 60px;
+  }
+`;
+
+const RightButton = styled(motion.div)`
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+  position: absolute;
+  width: 60px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    color: white;
+    font-size: 60px;
+  }
+`;
+
 const Row = styled(motion.div)`
   padding: 0px 60px;
   display: grid;
@@ -74,6 +115,8 @@ const Info = styled(motion.div)`
   width: 100%;
   bottom: 0;
   opacity: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   h4 {
     color: white;
     text-align: center;
@@ -161,6 +204,11 @@ const rowVariants = {
   },
 };
 
+const arrowBtnVaraints = {
+  normal: { opacity: 0 },
+  hover: { opacity: 1 },
+};
+
 const offset = 6;
 
 function Home() {
@@ -200,15 +248,20 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner
-            onClick={increaseIndex}
-            bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}
-          >
+          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
           <Slider>
+            <SliderTitle>Now Playing</SliderTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <LeftButton
+                variants={arrowBtnVaraints}
+                initial="normal"
+                whileHover="hover"
+              >
+                <NavigateBeforeIcon />
+              </LeftButton>
               <Row
                 variants={rowVariants}
                 initial="hidden"
@@ -239,6 +292,14 @@ function Home() {
                     </Box>
                   ))}
               </Row>
+              <RightButton
+                variants={arrowBtnVaraints}
+                initial="normal"
+                whileHover="hover"
+                onClick={increaseIndex}
+              >
+                <NavigateNextIcon />
+              </RightButton>
             </AnimatePresence>
           </Slider>
           <AnimatePresence>
