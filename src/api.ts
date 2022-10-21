@@ -8,12 +8,18 @@ interface IMovie {
   title: string;
   overview: string;
 }
+export interface IGetPopularMoviesResults {
+  page: number;
+  results: IMovie[];
+  total_pages: number;
+  total_results: number;
+}
 
 export interface IGetMoviesResults {
-  dates: {
-    maximum: string;
-    minimum: string;
-  };
+  // dates: {
+  //   maximum: string;
+  //   minimum: string;
+  // };
   page: number;
   results: IMovie[];
   total_pages: number;
@@ -39,9 +45,21 @@ export interface IGetSearchResults {
   total_results: number;
 }
 
-export function getMovies() {
+export function getNowPlayingMovies() {
   return fetch(
     `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
+  ).then((response) => response.json());
+}
+
+export function getPopularMovies() {
+  return fetch(
+    `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+  ).then((response) => response.json());
+}
+
+export function getTvProgrames() {
+  return fetch(
+    `${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1`
   ).then((response) => response.json());
 }
 
