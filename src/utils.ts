@@ -3,8 +3,8 @@ export function makeImagePath(id: string, format?: string) {
 }
 
 export enum Types {
-  "now_playing" = "Now Playing",
-  "popular" = "Popular",
-  "top_rated" = "Top Rated",
-  "upcoming" = "Upcoming",
+  "now_playing" = "now_playing",
+  "popular" = "popular",
+  "top_rated" = "top_rated",
+  "upcoming" = "upcoming",
 }

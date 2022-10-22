@@ -1,7 +1,7 @@
 const API_KEY = "9c9934e5f1d2067a566e93eede75e49e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
-interface IMovie {
+export interface IMovie {
   id: number;
   backdrop_path: string;
   poster_path: string;
@@ -16,10 +16,6 @@ export interface IGetPopularMoviesResults {
 }
 
 export interface IGetMoviesResults {
-  // dates: {
-  //   maximum: string;
-  //   minimum: string;
-  // };
   page: number;
   results: IMovie[];
   total_pages: number;
@@ -43,6 +39,12 @@ export interface IGetSearchResults {
   results: ISearch[];
   total_pages: number;
   total_results: number;
+}
+
+export async function getMovieDetail(id: string) {
+  return await (
+    await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`)
+  ).json();
 }
 
 export function getNowPlayingMovies() {

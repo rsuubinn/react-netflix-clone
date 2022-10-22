@@ -7,7 +7,7 @@ import {
   IGetPopularMoviesResults,
 } from "../api";
 import { makeImagePath, Types } from "../utils";
-import Slider from "../Components/Slider";
+import MovieSlider from "../Components/MovieSlider";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -66,10 +66,10 @@ function Home() {
             <Overview>{nowPlayingMovieData?.results[0].overview}</Overview>
           </Banner>
           {nowPlayingMovieData ? (
-            <Slider type={Types.now_playing} data={nowPlayingMovieData} />
+            <MovieSlider type={Types.now_playing} data={nowPlayingMovieData} />
           ) : null}
           {/* {popularMovieData ? (
-            <Slider type={Types.popular} data={popularMovieData} />
+            <MovieSlider type={Types.popular} data={popularMovieData} />
           ) : null} */}
         </>
       )}
