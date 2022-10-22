@@ -31,9 +31,10 @@ const MovieBox = styled(motion.div)`
 
 const Poster = styled.div<{ imagepath: string }>`
   width: 100%;
+  height: 50%;
   background-size: cover;
   background-position: center center;
-  height: 50%;
+  background-image: url(${(props) => props.imagepath});
 `;
 
 const Title = styled.h2`
@@ -82,7 +83,7 @@ function MovieDetail({ type, movieId }: IMovieDetail) {
     () => getMovieDetail(movieId)
   );
   const movieMatch = useMatch("/movies/:movieId");
-  console.log(movieData);
+  console.log(movieData?.backdrop_path);
   // const clickedMovie =
   //   movieMatch?.params.movieId &&
   //   data?.results.find((movie) => +movieMatch.params.movieId! === movie.id);

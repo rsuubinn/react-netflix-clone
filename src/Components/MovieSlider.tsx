@@ -10,6 +10,7 @@ import MovieDetail from "./MovieDetail";
 
 const Slider = styled.div`
   margin-bottom: 45vh;
+  position: relative;
 `;
 
 const SliderTitle = styled.h2`
@@ -21,7 +22,6 @@ const SliderTitle = styled.h2`
 `;
 
 const LeftButton = styled(motion.div)`
-  /* z-index: 2; */
   cursor: pointer;
   position: absolute;
   opacity: 0;
@@ -37,7 +37,6 @@ const LeftButton = styled(motion.div)`
 `;
 
 const RightButton = styled(motion.div)`
-  /* z-index: 2; */
   right: 0;
   opacity: 0;
   cursor: pointer;
@@ -54,7 +53,6 @@ const RightButton = styled(motion.div)`
 `;
 
 const SliderRow = styled(motion.div)`
-  /* z-index: 1; */
   padding: 0px 60px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
