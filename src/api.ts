@@ -8,6 +8,18 @@ export interface IMovie {
   title: string;
   overview: string;
 }
+
+export interface IMovieDetail {
+  id: number;
+  backdrop_path: string;
+  poster_path: string;
+  title: string;
+  overview: string;
+  vote_average: number;
+  genres: [{ id: number; name: string }];
+  runtime?: number;
+  release_date: string;
+}
 export interface IGetPopularMoviesResults {
   page: number;
   results: IMovie[];

@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useQuery } from "react-query";
-import { Navigate, useMatch, useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getMovieDetail, IGetMoviesResults, IMovie } from "../api";
+import { getMovieDetail, IMovieDetail } from "../api";
 import { makeImagePath } from "../utils";
 
 const Overlay = styled(motion.div)`
@@ -17,7 +17,6 @@ const Overlay = styled(motion.div)`
 const Wrapper = styled.div``;
 
 const MovieBox = styled(motion.div)`
-  /* z-index: 3; */
   width: 40vw;
   height: 80vh;
   position: absolute;
@@ -53,6 +52,14 @@ const Overview = styled.p`
   font-size: 20px;
 `;
 
+const Runtime = styled.div`
+  color: ${(props) => props.theme.white.lighter};
+`;
+
+const Vote = styled.div`
+  color: ${(props) => props.theme.white.lighter};
+`;
+
 const overlayVariants = {
   hidden: {
     opacity: 0,
@@ -70,15 +77,15 @@ const overlayVariants = {
 
 const movieBoxVariants = {};
 
-interface IMovieDetail {
+interface IMovieDetailProps {
   type: string;
   movieId: string;
 }
 
-function MovieDetail({ type, movieId }: IMovieDetail) {
+function MovieDetail({ type, movieId }: IMovieDetailProps) {
   const { scrollY } = useScroll();
   const navigate = useNavigate();
-  const { data: movieData, isLoading } = useQuery<IMovie>(
+  const { data: movieData, isLoading } = useQuery<IMovieDetail>(
     ["movies", `${type}`],
     () => getMovieDetail(movieId)
   );
@@ -114,6 +121,8 @@ function MovieDetail({ type, movieId }: IMovieDetail) {
             />
             <Title>{movieData.title}</Title>
             <Overview>{movieData.overview}</Overview>
+            <Runtime>{movieData.runtime}</Runtime>
+            <Vote>{movieData.vote_average}</Vote>
           </MovieBox>
         </Wrapper>
       ) : null}
