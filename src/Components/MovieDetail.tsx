@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMovieDetail, IMovieDetail } from "../api";
-import { makeImagePath } from "../utils";
+import { makeImagePath, makeRuntime } from "../utils";
 
 const Overlay = styled(motion.div)`
   width: 100%;
@@ -60,6 +60,14 @@ const Vote = styled.div`
   color: ${(props) => props.theme.white.lighter};
 `;
 
+const ReleaseDate = styled.div`
+  color: ${(props) => props.theme.white.lighter};
+`;
+
+const Genres = styled.div`
+  color: ${(props) => props.theme.white.lighter};
+`;
+
 const overlayVariants = {
   hidden: {
     opacity: 0,
@@ -90,7 +98,6 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
     () => getMovieDetail(movieId)
   );
   const movieMatch = useMatch("/movies/:movieId");
-  console.log(movieData?.backdrop_path);
   // const clickedMovie =
   //   movieMatch?.params.movieId &&
   //   data?.results.find((movie) => +movieMatch.params.movieId! === movie.id);
@@ -121,8 +128,16 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
             />
             <Title>{movieData.title}</Title>
             <Overview>{movieData.overview}</Overview>
-            <Runtime>{movieData.runtime}</Runtime>
+            {movieData.runtime && (
+              <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+            )}
             <Vote>{movieData.vote_average}</Vote>
+            <ReleaseDate>{movieData.release_date}</ReleaseDate>
+            <Genres>
+              {movieData.genres.map((genre) => (
+                <span key={genre.id}>{genre.name}</span>
+              ))}
+            </Genres>
           </MovieBox>
         </Wrapper>
       ) : null}
