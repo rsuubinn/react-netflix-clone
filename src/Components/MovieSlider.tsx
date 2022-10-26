@@ -19,6 +19,7 @@ const SliderTitle = styled.h2`
   padding: 5px 60px;
   font-size: 30px;
   font-weight: 600;
+  margin-bottom: 10px;
 `;
 
 const LeftButton = styled(motion.div)`
@@ -77,11 +78,14 @@ const Box = styled(motion.div)<{ imagepath: string }>`
 `;
 
 const Info = styled(motion.div)`
+  display: block;
   padding: 10px;
   background-color: ${(props) => props.theme.black.lighter};
   position: absolute;
   width: 100%;
   bottom: 0;
+  left: 0;
+  right: 0;
   opacity: 0;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -179,7 +183,7 @@ function MovieSlider({ data, type }: ISlider) {
       {data ? (
         <>
           <Slider>
-            <SliderTitle>{type}</SliderTitle>
+            <SliderTitle>{type === "now_playing" && "지금 상영중"}</SliderTitle>
             <AnimatePresence
               custom={reverse}
               initial={false}

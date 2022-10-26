@@ -68,9 +68,9 @@ function Home() {
           {nowPlayingMovieData ? (
             <MovieSlider type={Types.now_playing} data={nowPlayingMovieData} />
           ) : null}
-          {/* {popularMovieData ? (
+          {popularMovieData ? (
             <MovieSlider type={Types.popular} data={popularMovieData} />
-          ) : null} */}
+          ) : null}
         </>
       )}
     </Wrapper>

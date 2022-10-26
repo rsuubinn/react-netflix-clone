@@ -19,6 +19,8 @@ export interface IMovieDetail {
   genres: [{ id: number; name: string }];
   runtime?: number;
   release_date: string;
+  adult: boolean;
+  homepage?: string;
 }
 export interface IGetPopularMoviesResults {
   page: number;
@@ -55,20 +57,24 @@ export interface IGetSearchResults {
 
 export async function getMovieDetail(id: string) {
   return await (
-    await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`)
+    await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=ko`)
   ).json();
 }
 
-export function getNowPlayingMovies() {
-  return fetch(
-    `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
-  ).then((response) => response.json());
+export async function getNowPlayingMovies() {
+  return await (
+    await fetch(
+      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+  ).json();
 }
 
-export function getPopularMovies() {
-  return fetch(
-    `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
-  ).then((response) => response.json());
+export async function getPopularMovies() {
+  return await (
+    await fetch(
+      `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+  ).json();
 }
 
 export function getTvProgrames() {

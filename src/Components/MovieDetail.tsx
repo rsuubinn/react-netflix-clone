@@ -4,6 +4,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMovieDetail, IMovieDetail } from "../api";
 import { makeImagePath, makeRuntime } from "../utils";
+import StarIcon from "@mui/icons-material/Star";
 
 const Overlay = styled(motion.div)`
   width: 100%;
@@ -17,7 +18,7 @@ const Overlay = styled(motion.div)`
 const Wrapper = styled.div``;
 
 const MovieBox = styled(motion.div)`
-  width: 40vw;
+  width: 50vw;
   height: 80vh;
   position: absolute;
   left: 0;
@@ -33,39 +34,58 @@ const Poster = styled.div<{ imagepath: string }>`
   height: 50%;
   background-size: cover;
   background-position: center center;
-  background-image: url(${(props) => props.imagepath});
+  background-image: linear-gradient(rgba(0, 0, 0, 0), #181818),
+    url(${(props) => props.imagepath});
+`;
+
+const Detail = styled.div`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 0px 20px;
 `;
 
 const Title = styled.h2`
-  color: ${(props) => props.theme.white.lighter};
-  top: -80px;
-  position: relative;
-  font-size: 30px;
-  padding: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 40px;
 `;
 
 const Overview = styled.p`
-  color: ${(props) => props.theme.white.lighter};
-  top: -80px;
-  position: relative;
-  padding: 20px;
-  font-size: 20px;
+  margin-bottom: 20px;
+  line-height: 1.3;
 `;
 
-const Runtime = styled.div`
-  color: ${(props) => props.theme.white.lighter};
+const Runtime = styled.div``;
+
+const FlexBox = styled.div`
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+  div:first-child {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    div:first-child {
+      margin-right: 8px;
+    }
+  }
 `;
 
 const Vote = styled.div`
-  color: ${(props) => props.theme.white.lighter};
+  display: flex;
+  align-items: center;
+  svg {
+    color: ${(props) => props.theme.red};
+    margin-right: 3px;
+  }
 `;
 
-const ReleaseDate = styled.div`
-  color: ${(props) => props.theme.white.lighter};
-`;
+const ReleaseDate = styled.div``;
 
-const Genres = styled.div`
-  color: ${(props) => props.theme.white.lighter};
+const Genres = styled.ul`
+  display: flex;
+  span:last-child {
+    display: none;
+  }
 `;
 
 const overlayVariants = {
@@ -97,6 +117,7 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
     ["movies", `${type}`],
     () => getMovieDetail(movieId)
   );
+  console.log(movieData);
   const movieMatch = useMatch("/movies/:movieId");
   // const clickedMovie =
   //   movieMatch?.params.movieId &&
@@ -116,7 +137,7 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
       {movieData ? (
         <Wrapper key={type + movieData.id}>
           <MovieBox
-            style={{ top: scrollY.get() + 30 }}
+            style={{ top: scrollY.get() + 100 }}
             variants={movieBoxVariants}
           >
             <Poster
@@ -126,18 +147,35 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                   : movieData.poster_path
               )}
             />
-            <Title>{movieData.title}</Title>
-            <Overview>{movieData.overview}</Overview>
-            {movieData.runtime && (
-              <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
-            )}
-            <Vote>{movieData.vote_average}</Vote>
-            <ReleaseDate>{movieData.release_date}</ReleaseDate>
-            <Genres>
-              {movieData.genres.map((genre) => (
-                <span key={genre.id}>{genre.name}</span>
-              ))}
-            </Genres>
+            <Detail>
+              <Title>{movieData.title}</Title>
+              <FlexBox>
+                <div>
+                  <ReleaseDate>
+                    {/* {movieData.release_date.split("-", 1)} */}
+                  </ReleaseDate>
+                  {movieData.runtime && (
+                    <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+                  )}
+                </div>
+                <div>
+                  <Vote>
+                    <StarIcon></StarIcon>
+                    {/* {movieData.vote_average.toFixed(1)} */}
+                  </Vote>
+                </div>
+              </FlexBox>
+              <Overview>{movieData.overview}</Overview>
+
+              <Genres>
+                {/* {movieData.genres.map((genre) => (
+                  <>
+                    <li key={genre.id}>{genre.name}</li>
+                    <span> • </span>
+                  </>
+                ))} */}
+              </Genres>
+            </Detail>
           </MovieBox>
         </Wrapper>
       ) : null}
