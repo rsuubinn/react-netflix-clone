@@ -11,32 +11,11 @@ export interface IMovieDetail {
   genres: [{ id: number; name: string }];
   runtime?: number;
   release_date: string;
-  adult: boolean;
-  homepage?: string;
 }
 
 export interface IGetMoviesResults {
   page: number;
   results: IMovieDetail[];
-  total_pages: number;
-  total_results: number;
-}
-
-export interface ISearch {
-  backdrop_path: string;
-  id: number;
-  media_type: string;
-  original_title: string;
-  overview: string;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  vote_average: number;
-}
-
-export interface IGetSearchResults {
-  page: number;
-  results: ISearch[];
   total_pages: number;
   total_results: number;
 }
@@ -63,8 +42,18 @@ export async function getPopularMovies() {
   ).json();
 }
 
-export function getSearch(keyword: string) {
-  return fetch(
-    `${BASE_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${keyword}&page=1&include_adult=false}`
-  ).then((response) => response.json());
+export async function getTopRatedMovies() {
+  return await (
+    await fetch(
+      `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+  ).json();
+}
+
+export async function getUpcomingMovies() {
+  return await (
+    await fetch(
+      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+  ).json();
 }

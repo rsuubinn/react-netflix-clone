@@ -3,10 +3,12 @@ import styled from "styled-components";
 import {
   getNowPlayingMovies,
   getPopularMovies,
+  getTopRatedMovies,
+  getUpcomingMovies,
   IGetMoviesResults,
-} from "../api";
+} from "../apis/movieApis";
 import { makeImagePath, Types } from "../utils";
-import MovieSlider from "../Components/MovieSlider";
+import MovieSlider from "../Components/Movies/MovieSlider";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -19,7 +21,7 @@ const Loader = styled.div`
   align-items: center;
 `;
 
-const Banner = styled.div<{ bgPhoto: string }>`
+const Banner = styled.div<{ imagepath: string }>`
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -27,7 +29,7 @@ const Banner = styled.div<{ bgPhoto: string }>`
   color: white;
   padding: 60px;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${(props) => props.bgPhoto});
+    url(${(props) => props.imagepath});
   background-size: cover;
 `;
 
@@ -46,15 +48,21 @@ function Home() {
     useQuery<IGetMoviesResults>(["movies", "nowPlaying"], getNowPlayingMovies);
   const { data: popularMovieData, isLoading: popularLoading } =
     useQuery<IGetMoviesResults>(["movies", "popular"], getPopularMovies);
-
+  const { data: topRatedMovieData, isLoading: topRatedLoading } =
+    useQuery<IGetMoviesResults>(["movies", "topRated"], getTopRatedMovies);
+  const { data: upComingMovieData, isLoading: upComingLoading } =
+    useQuery<IGetMoviesResults>(["movies", "upComing"], getUpcomingMovies);
   return (
     <Wrapper>
-      {nowPlayingLoading && popularLoading ? (
+      {nowPlayingLoading &&
+      popularLoading &&
+      topRatedLoading &&
+      upComingLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
           <Banner
-            bgPhoto={makeImagePath(
+            imagepath={makeImagePath(
               nowPlayingMovieData?.results[0].backdrop_path || ""
             )}
           >
@@ -64,6 +72,8 @@ function Home() {
 
           <MovieSlider type={Types.now_playing} data={nowPlayingMovieData!} />
           <MovieSlider type={Types.popular} data={popularMovieData!} />
+          <MovieSlider type={Types.top_rated} data={topRatedMovieData!} />
+          <MovieSlider type={Types.upcoming} data={upComingMovieData!} />
         </>
       )}
     </Wrapper>

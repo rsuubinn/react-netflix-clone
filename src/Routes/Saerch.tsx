@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { getSearch, IGetSearchResults, ISearch } from "../api";
+import { getSearch, IGetSearchResults, ISearch } from "../apis/searchApis";
 import { makeImagePath } from "../utils";
 
 const Loader = styled.div`

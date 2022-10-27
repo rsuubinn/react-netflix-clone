@@ -2,8 +2,8 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getMovieDetail, IMovieDetail } from "../api";
-import { makeImagePath, makeRuntime } from "../utils";
+import { getMovieDetail, IMovieDetail } from "../../apis/movieApis";
+import { makeImagePath, makeRuntime } from "../../utils";
 import StarIcon from "@mui/icons-material/Star";
 
 const Overlay = styled(motion.div)`
@@ -85,9 +85,14 @@ const ReleaseDate = styled.div``;
 
 const Genres = styled.ul`
   display: flex;
-  span:last-child {
-    display: none;
+  span {
+    color: gray;
+    margin-right: 5px;
   }
+`;
+
+const Genre = styled.li`
+  margin-right: 6px;
 `;
 
 const overlayVariants = {
@@ -117,10 +122,10 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
   const navigate = useNavigate();
 
   const { data: movieData, isLoading: movieLoading } = useQuery<IMovieDetail>(
-    ["movies", `${type}`],
+    ["movies", `${type}_detail`],
     () => getMovieDetail(movieId)
   );
-  console.log(movieData);
+
   const onOverlayClicked = () => {
     navigate("/");
   };
@@ -171,11 +176,9 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                   <Overview>{movieData.overview}</Overview>
 
                   <Genres>
+                    <span>장르: </span>
                     {movieData.genres.map((genre) => (
-                      <>
-                        <li key={type + genre.id}>{genre.name}</li>
-                        <span> • </span>
-                      </>
+                      <Genre key={type + genre.id}>{genre.name}</Genre>
                     ))}
                   </Genres>
                 </Detail>

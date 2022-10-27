@@ -2,10 +2,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
-import { makeImagePath, Types } from "../utils";
-import { IGetMoviesResults } from "../api";
+import { makeImagePath, Types } from "../../utils";
+import { IGetMoviesResults } from "../../apis/movieApis";
 import MovieDetail from "./MovieDetail";
 
 const Slider = styled.div`
@@ -17,7 +17,7 @@ const SliderTitle = styled.h2`
   color: ${(props) => props.theme.white.lighter};
   width: 100%;
   padding: 5px 60px;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 600;
   margin-bottom: 10px;
 `;
@@ -151,6 +151,7 @@ function MovieSlider({ data, type }: ISlider) {
   const [leaving, setLeaving] = useState(false);
   const [index, setIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
+  const [sliderTitle, setSliderTitle] = useState("");
 
   const increaseIndex = () => {
     if (data) {
@@ -178,12 +179,28 @@ function MovieSlider({ data, type }: ISlider) {
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
   };
+  useEffect(() => {
+    switch (type) {
+      case "now_playing":
+        setSliderTitle("상영중인 영화");
+        break;
+      case "popular":
+        setSliderTitle("인기있는 영화");
+        break;
+      case "top_rated":
+        setSliderTitle("평점높은 영화");
+        break;
+      case "upcoming":
+        setSliderTitle("개봉예정 영화");
+        break;
+    }
+  }, [type]);
   return (
     <>
       {data ? (
         <>
           <Slider>
-            <SliderTitle>{type}</SliderTitle>
+            <SliderTitle>{sliderTitle}</SliderTitle>
             <AnimatePresence
               custom={reverse}
               initial={false}
