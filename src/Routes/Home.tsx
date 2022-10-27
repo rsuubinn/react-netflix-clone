@@ -4,7 +4,6 @@ import {
   getNowPlayingMovies,
   getPopularMovies,
   IGetMoviesResults,
-  IGetPopularMoviesResults,
 } from "../api";
 import { makeImagePath, Types } from "../utils";
 import MovieSlider from "../Components/MovieSlider";
@@ -43,17 +42,14 @@ const Title = styled.h2`
 `;
 
 function Home() {
-  const { data: nowPlayingMovieData, isLoading } = useQuery<IGetMoviesResults>(
-    ["movies", "nowPlaying"],
-    getNowPlayingMovies
-  );
-  const { data: popularMovieData } = useQuery<IGetPopularMoviesResults>(
-    ["movies", "popular"],
-    getPopularMovies
-  );
+  const { data: nowPlayingMovieData, isLoading: nowPlayingLoading } =
+    useQuery<IGetMoviesResults>(["movies", "nowPlaying"], getNowPlayingMovies);
+  const { data: popularMovieData, isLoading: popularLoading } =
+    useQuery<IGetMoviesResults>(["movies", "popular"], getPopularMovies);
+
   return (
     <Wrapper>
-      {isLoading ? (
+      {nowPlayingLoading && popularLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -65,12 +61,9 @@ function Home() {
             <Title>{nowPlayingMovieData?.results[0].title}</Title>
             <Overview>{nowPlayingMovieData?.results[0].overview}</Overview>
           </Banner>
-          {nowPlayingMovieData ? (
-            <MovieSlider type={Types.now_playing} data={nowPlayingMovieData} />
-          ) : null}
-          {popularMovieData ? (
-            <MovieSlider type={Types.popular} data={popularMovieData} />
-          ) : null}
+
+          <MovieSlider type={Types.now_playing} data={nowPlayingMovieData!} />
+          <MovieSlider type={Types.popular} data={popularMovieData!} />
         </>
       )}
     </Wrapper>

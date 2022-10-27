@@ -37,11 +37,11 @@ const Info = styled(motion.div)`
   }
 `;
 
-const Box = styled(motion.div)<{ bgPhoto: string }>`
+const Box = styled(motion.div)<{ imagepath: string }>`
   border-radius: 5px;
   color: white;
   height: 150px;
-  background-image: url(${(props) => props.bgPhoto});
+  background-image: url(${(props) => props.imagepath});
   background-position: center center;
   background-size: cover;
   cursor: pointer;
@@ -67,10 +67,10 @@ const BigSearch = styled(motion.div)`
   border-radius: 5px;
 `;
 
-const BigCover = styled.div<{ bgPhoto: string }>`
+const BigCover = styled.div<{ imagepath: string }>`
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  /* background-image: url(${(props) => props.bgPhoto}); */
+  /* background-image: url(${(props) => props.imagepath}); */
   background-position: center center;
   background-size: cover;
   width: 100%;
@@ -145,7 +145,7 @@ function Search() {
                   initial="init"
                   transition={{ type: "tween" }}
                   variants={boxVariants}
-                  bgPhoto={makeImagePath(search.poster_path, "w500")}
+                  imagepath={makeImagePath(search.poster_path, "w500")}
                   key={search.id}
                 >
                   <Info variants={infoVariants}>
@@ -165,7 +165,7 @@ function Search() {
                   style={{ top: scrollY.get() + 100 }}
                 >
                   <BigCover
-                    bgPhoto={makeImagePath(clickedSearch.poster_path, "w500")}
+                    imagepath={makeImagePath(clickedSearch.poster_path, "w500")}
                     style={{
                       backgroundImage: `linear-gradient(to top, #181818, transparent),url(${makeImagePath(
                         clickedSearch.poster_path,

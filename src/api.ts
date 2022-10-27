@@ -1,14 +1,6 @@
 const API_KEY = "9c9934e5f1d2067a566e93eede75e49e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
-export interface IMovie {
-  id: number;
-  backdrop_path: string;
-  poster_path: string;
-  title: string;
-  overview: string;
-}
-
 export interface IMovieDetail {
   id: number;
   backdrop_path: string;
@@ -22,16 +14,10 @@ export interface IMovieDetail {
   adult: boolean;
   homepage?: string;
 }
-export interface IGetPopularMoviesResults {
-  page: number;
-  results: IMovie[];
-  total_pages: number;
-  total_results: number;
-}
 
 export interface IGetMoviesResults {
   page: number;
-  results: IMovie[];
+  results: IMovieDetail[];
   total_pages: number;
   total_results: number;
 }
@@ -75,12 +61,6 @@ export async function getPopularMovies() {
       `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
-}
-
-export function getTvProgrames() {
-  return fetch(
-    `${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1`
-  ).then((response) => response.json());
 }
 
 export function getSearch(keyword: string) {

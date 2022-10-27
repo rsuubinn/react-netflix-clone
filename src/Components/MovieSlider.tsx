@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -183,7 +183,7 @@ function MovieSlider({ data, type }: ISlider) {
       {data ? (
         <>
           <Slider>
-            <SliderTitle>{type === "now_playing" && "지금 상영중"}</SliderTitle>
+            <SliderTitle>{type}</SliderTitle>
             <AnimatePresence
               custom={reverse}
               initial={false}
@@ -241,11 +241,8 @@ function MovieSlider({ data, type }: ISlider) {
           </Slider>
 
           <AnimatePresence>
-            {movieMatch?.params.movieId ? (
-              <MovieDetail
-                movieId={movieMatch.params.movieId}
-                type={type}
-              ></MovieDetail>
+            {movieMatch ? (
+              <MovieDetail movieId={movieMatch.params.movieId!} type={type} />
             ) : null}
           </AnimatePresence>
         </>

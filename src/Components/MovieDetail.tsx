@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useQuery } from "react-query";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMovieDetail, IMovieDetail } from "../api";
 import { makeImagePath, makeRuntime } from "../utils";
@@ -14,6 +14,8 @@ const Overlay = styled(motion.div)`
   top: 0;
   opacity: 0;
 `;
+
+const Loader = styled.div``;
 
 const Wrapper = styled.div``;
 
@@ -113,72 +115,75 @@ interface IMovieDetailProps {
 function MovieDetail({ type, movieId }: IMovieDetailProps) {
   const { scrollY } = useScroll();
   const navigate = useNavigate();
-  const { data: movieData, isLoading } = useQuery<IMovieDetail>(
+
+  const { data: movieData, isLoading: movieLoading } = useQuery<IMovieDetail>(
     ["movies", `${type}`],
     () => getMovieDetail(movieId)
   );
   console.log(movieData);
-  const movieMatch = useMatch("/movies/:movieId");
-  // const clickedMovie =
-  //   movieMatch?.params.movieId &&
-  //   data?.results.find((movie) => +movieMatch.params.movieId! === movie.id);
   const onOverlayClicked = () => {
     navigate("/");
   };
   return (
     <AnimatePresence>
-      <Overlay
-        onClick={onOverlayClicked}
-        variants={overlayVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      />
-      {movieData ? (
-        <Wrapper key={type + movieData.id}>
-          <MovieBox
-            style={{ top: scrollY.get() + 100 }}
-            variants={movieBoxVariants}
-          >
-            <Poster
-              imagepath={makeImagePath(
-                movieData.backdrop_path
-                  ? movieData.backdrop_path
-                  : movieData.poster_path
-              )}
-            />
-            <Detail>
-              <Title>{movieData.title}</Title>
-              <FlexBox>
-                <div>
-                  <ReleaseDate>
-                    {/* {movieData.release_date.split("-", 1)} */}
-                  </ReleaseDate>
-                  {movieData.runtime && (
-                    <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+      {movieLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <Overlay
+            onClick={onOverlayClicked}
+            variants={overlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          />
+          {movieData ? (
+            <Wrapper key={type + movieData.id}>
+              <MovieBox
+                style={{ top: scrollY.get() + 100 }}
+                variants={movieBoxVariants}
+              >
+                <Poster
+                  imagepath={makeImagePath(
+                    movieData.backdrop_path
+                      ? movieData.backdrop_path
+                      : movieData.poster_path
                   )}
-                </div>
-                <div>
-                  <Vote>
-                    <StarIcon></StarIcon>
-                    {/* {movieData.vote_average.toFixed(1)} */}
-                  </Vote>
-                </div>
-              </FlexBox>
-              <Overview>{movieData.overview}</Overview>
+                />
+                <Detail>
+                  <Title>{movieData.title}</Title>
+                  <FlexBox>
+                    <div>
+                      <ReleaseDate>
+                        {movieData.release_date.split("-", 1)}
+                      </ReleaseDate>
+                      {movieData.runtime && (
+                        <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+                      )}
+                    </div>
+                    <div>
+                      <Vote>
+                        <StarIcon></StarIcon>
+                        {movieData.vote_average.toFixed(1)}
+                      </Vote>
+                    </div>
+                  </FlexBox>
+                  <Overview>{movieData.overview}</Overview>
 
-              <Genres>
-                {/* {movieData.genres.map((genre) => (
-                  <>
-                    <li key={genre.id}>{genre.name}</li>
-                    <span> • </span>
-                  </>
-                ))} */}
-              </Genres>
-            </Detail>
-          </MovieBox>
-        </Wrapper>
-      ) : null}
+                  <Genres>
+                    {movieData.genres.map((genre) => (
+                      <>
+                        <li key={type + genre.id}>{genre.name}</li>
+                        <span> • </span>
+                      </>
+                    ))}
+                  </Genres>
+                </Detail>
+              </MovieBox>
+            </Wrapper>
+          ) : null}
+        </>
+      )}
     </AnimatePresence>
   );
 }
