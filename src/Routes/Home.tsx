@@ -7,7 +7,7 @@ import {
   getUpcomingMovies,
   IGetMoviesResults,
 } from "../apis/movieApis";
-import { makeImagePath, Types } from "../utils";
+import { makeImagePath, MovieTypes } from "../utils";
 import MovieSlider from "../Components/Movies/MovieSlider";
 
 const Wrapper = styled.div`
@@ -70,10 +70,13 @@ function Home() {
             <Overview>{nowPlayingMovieData?.results[0].overview}</Overview>
           </Banner>
 
-          <MovieSlider type={Types.now_playing} data={nowPlayingMovieData!} />
-          <MovieSlider type={Types.popular} data={popularMovieData!} />
-          <MovieSlider type={Types.top_rated} data={topRatedMovieData!} />
-          <MovieSlider type={Types.upcoming} data={upComingMovieData!} />
+          <MovieSlider
+            type={MovieTypes.now_playing}
+            data={nowPlayingMovieData!}
+          />
+          <MovieSlider type={MovieTypes.popular} data={popularMovieData!} />
+          <MovieSlider type={MovieTypes.top_rated} data={topRatedMovieData!} />
+          <MovieSlider type={MovieTypes.upcoming} data={upComingMovieData!} />
         </>
       )}
     </Wrapper>

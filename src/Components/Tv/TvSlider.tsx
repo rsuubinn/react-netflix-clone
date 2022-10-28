@@ -4,9 +4,9 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useEffect, useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
-import { makeImagePath, MovieTypes } from "../../utils";
-import { IGetMoviesResults } from "../../apis/movieApis";
-import MovieDetail from "./MovieDetail";
+import { makeImagePath, TvTypes } from "../../utils";
+import { IGetTvResults } from "../../apis/tvApi";
+import TvDetail from "./TvDetail";
 
 const Slider = styled.div`
   margin-bottom: 45vh;
@@ -141,24 +141,24 @@ const arrowBtnVaraints = {
 const offset = 6;
 
 interface ISlider {
-  data: IGetMoviesResults;
-  type: MovieTypes;
+  data: IGetTvResults;
+  type: TvTypes;
 }
 
-function MovieSlider({ data, type }: ISlider) {
+function TvSlider({ data, type }: ISlider) {
   const navigate = useNavigate();
-  const movieMatch = useMatch("/movies/:movieId");
+  const tvMatch = useMatch("/tv/:tvId");
   const [leaving, setLeaving] = useState(false);
   const [index, setIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
   const [sliderTitle, setSliderTitle] = useState("");
-
+  console.log(tvMatch);
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = data?.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      const totalTv = data?.results.length - 1;
+      const maxIndex = Math.floor(totalTv / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
       setReverse(false);
     }
@@ -167,8 +167,8 @@ function MovieSlider({ data, type }: ISlider) {
     if (data) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = data?.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      const totalTv = data?.results.length - 1;
+      const maxIndex = Math.floor(totalTv / offset) - 1;
       setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
       setReverse(true);
     }
@@ -176,22 +176,13 @@ function MovieSlider({ data, type }: ISlider) {
   const toggleLeaving = () => {
     setLeaving((prev) => !prev);
   };
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+  const onBoxClicked = (tvId: number) => {
+    navigate(`/tv/${tvId}`);
   };
   useEffect(() => {
     switch (type) {
-      case "now_playing":
-        setSliderTitle("상영중인 영화");
-        break;
-      case "popular":
-        setSliderTitle("인기있는 영화");
-        break;
-      case "top_rated":
-        setSliderTitle("평점높은 영화");
-        break;
-      case "upcoming":
-        setSliderTitle("개봉예정 영화");
+      case "on_the_air":
+        setSliderTitle("방영중인 티비 프로그램");
         break;
     }
   }, [type]);
@@ -218,20 +209,20 @@ function MovieSlider({ data, type }: ISlider) {
                 {data?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
+                  .map((tv) => (
                     <Box
-                      key={movie.id}
+                      key={tv.id}
                       onClick={() => {
-                        onBoxClicked(movie.id);
+                        onBoxClicked(tv.id);
                       }}
                       variants={boxVariants}
                       initial="normal"
                       whileHover="hover"
                       transition={{ type: "tween" }}
-                      imagepath={makeImagePath(movie.poster_path, "w500")}
+                      imagepath={makeImagePath(tv.poster_path, "w500")}
                     >
                       <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
+                        <h4>{tv.name}</h4>
                       </Info>
                     </Box>
                   ))}
@@ -258,8 +249,8 @@ function MovieSlider({ data, type }: ISlider) {
           </Slider>
 
           <AnimatePresence>
-            {movieMatch ? (
-              <MovieDetail movieId={movieMatch.params.movieId!} type={type} />
+            {tvMatch ? (
+              <TvDetail tvId={tvMatch.params.tvId!} type={type} />
             ) : null}
           </AnimatePresence>
         </>
@@ -268,4 +259,4 @@ function MovieSlider({ data, type }: ISlider) {
   );
 }
 
-export default MovieSlider;
+export default TvSlider;

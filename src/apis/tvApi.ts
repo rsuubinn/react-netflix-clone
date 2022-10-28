@@ -5,12 +5,13 @@ export interface ITvDetail {
   id: number;
   backdrop_path: string;
   poster_path: string;
-  title: string;
+  name: string;
   overview: string;
   vote_average: number;
   genres: [{ id: number; name: string }];
-  runtime?: number;
-  release_date: string;
+  first_air_date: string;
+  number_of_seasons: number;
+  number_of_episodes: number;
 }
 
 export interface IGetTvResults {
@@ -18,6 +19,13 @@ export interface IGetTvResults {
   results: ITvDetail[];
   total_pages: number;
   total_results: number;
+}
+
+export async function getTvDetail(tvId: string) {
+  return await (
+    await fetch(`
+    ${BASE_URL}/tv/${tvId}?api_key=${API_KEY}&language=ko`)
+  ).json();
 }
 
 export async function getOnTheAirTvPrograms() {

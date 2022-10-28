@@ -1,7 +1,8 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { getOnTheAirTvPrograms, IGetTvResults } from "../apis/tvApi";
-import { makeImagePath } from "../utils";
+import TvSlider from "../Components/Tv/TvSlider";
+import { makeImagePath, TvTypes } from "../utils";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -34,23 +35,29 @@ const Overview = styled.p`
 const Title = styled.h2`
   font-size: 68px;
   margin-bottom: 12px;
+  width: 60%;
 `;
 
 function Tv() {
-  const { data, isLoading } = useQuery<IGetTvResults>(
-    ["tv", "onTheAir"],
-    getOnTheAirTvPrograms
-  );
+  const { data: onTheAirTvData, isLoading: onTheAirLoading } =
+    useQuery<IGetTvResults>(["tv", "onTheAir"], getOnTheAirTvPrograms);
+
   return (
     <Wrapper>
-      {isLoading ? (
+      {onTheAirLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner imagepath={makeImagePath(data?.results[0].backdrop_path!)}>
-            <Title></Title>
-            <Overview></Overview>
+          <Banner
+            imagepath={makeImagePath(
+              onTheAirTvData?.results[0].backdrop_path || ""
+            )}
+          >
+            <Title>{onTheAirTvData?.results[0].name}</Title>
+            <Overview>{onTheAirTvData?.results[0].overview}</Overview>
           </Banner>
+
+          <TvSlider data={onTheAirTvData!} type={TvTypes.on_the_air} />
         </>
       )}
     </Wrapper>
