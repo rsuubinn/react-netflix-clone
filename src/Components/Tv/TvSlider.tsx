@@ -148,10 +148,12 @@ interface ISlider {
 function TvSlider({ data, type }: ISlider) {
   const navigate = useNavigate();
   const tvMatch = useMatch("/tv/:tvId");
+  const tvSearchMatch = useMatch("/search/tv/:tvId");
   const [leaving, setLeaving] = useState(false);
   const [index, setIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
   const [sliderTitle, setSliderTitle] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -176,7 +178,11 @@ function TvSlider({ data, type }: ISlider) {
     setLeaving((prev) => !prev);
   };
   const onBoxClicked = (tvId: number) => {
-    navigate(`/tv/${tvId}`);
+    if (isSearch) {
+      navigate(`/search/tv/${tvId}`);
+    } else {
+      navigate(`/tv/${tvId}`);
+    }
   };
   useEffect(() => {
     switch (type) {
@@ -188,6 +194,10 @@ function TvSlider({ data, type }: ISlider) {
         break;
       case "popular":
         setSliderTitle("인기있는 티비 프로그램");
+        break;
+      case "search":
+        setSliderTitle("티비 프로그램");
+        setIsSearch(true);
         break;
     }
   }, [type]);
@@ -256,6 +266,9 @@ function TvSlider({ data, type }: ISlider) {
           <AnimatePresence>
             {tvMatch ? (
               <TvDetail tvId={tvMatch.params.tvId!} type={type} />
+            ) : null}
+            {tvSearchMatch ? (
+              <TvDetail tvId={tvSearchMatch.params.tvId!} type={type} />
             ) : null}
           </AnimatePresence>
         </>

@@ -5,12 +5,13 @@ export interface ISearch {
   backdrop_path: string;
   id: number;
   media_type: string;
-  original_title: string;
+  original_name: string;
   overview: string;
   poster_path: string;
   release_date: string;
   title: string;
   vote_average: number;
+  genres_ids: [{ id: number; name: string }];
 }
 
 export interface IGetSearchResults {
@@ -20,8 +21,26 @@ export interface IGetSearchResults {
   total_results: number;
 }
 
-export function getSearch(keyword: string) {
-  return fetch(
-    `${BASE_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${keyword}&page=1&include_adult=false}`
-  ).then((response) => response.json());
+export async function getSearch(keyword: string) {
+  return await (
+    await fetch(
+      `${BASE_URL}/search/multi?api_key=${API_KEY}&language=ko&query=${keyword}&page=1&include_adult=false}`
+    )
+  ).json();
+}
+
+export async function getMovieSearch(keyword: string) {
+  return await (
+    await fetch(
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko&query=${keyword}&page=1&include_adult=false`
+    )
+  ).json();
+}
+
+export async function getTvSearch(keyword: string) {
+  return await (
+    await fetch(
+      `${BASE_URL}/search/tv?api_key=${API_KEY}&language=ko&query=${keyword}&page=1&include_adult=false`
+    )
+  ).json();
 }

@@ -148,10 +148,12 @@ interface ISlider {
 function MovieSlider({ data, type }: ISlider) {
   const navigate = useNavigate();
   const movieMatch = useMatch("/movies/:movieId");
+  const movieSearchMatch = useMatch("/search/movies/:movieId");
   const [leaving, setLeaving] = useState(false);
   const [index, setIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
   const [sliderTitle, setSliderTitle] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
 
   const increaseIndex = () => {
     if (data) {
@@ -177,7 +179,11 @@ function MovieSlider({ data, type }: ISlider) {
     setLeaving((prev) => !prev);
   };
   const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+    if (isSearch) {
+      navigate(`/search/movies/${movieId}`);
+    } else {
+      navigate(`/movies/${movieId}`);
+    }
   };
   useEffect(() => {
     switch (type) {
@@ -192,6 +198,10 @@ function MovieSlider({ data, type }: ISlider) {
         break;
       case "upcoming":
         setSliderTitle("개봉예정 영화");
+        break;
+      case "search":
+        setSliderTitle("영화");
+        setIsSearch(true);
         break;
     }
   }, [type]);
@@ -260,6 +270,12 @@ function MovieSlider({ data, type }: ISlider) {
           <AnimatePresence>
             {movieMatch ? (
               <MovieDetail movieId={movieMatch.params.movieId!} type={type} />
+            ) : null}
+            {movieSearchMatch ? (
+              <MovieDetail
+                movieId={movieSearchMatch.params.movieId!}
+                type={type}
+              />
             ) : null}
           </AnimatePresence>
         </>

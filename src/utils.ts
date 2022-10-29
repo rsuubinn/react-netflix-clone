@@ -15,10 +15,12 @@ export enum MovieTypes {
   "popular" = "popular",
   "top_rated" = "top_rated",
   "upcoming" = "upcoming",
+  "search" = "search",
 }
 
 export enum TvTypes {
   "on_the_air" = "on_the_air",
   "top_rated" = "top_rated",
   "popular" = "popular",
+  "search" = "search",
 }
