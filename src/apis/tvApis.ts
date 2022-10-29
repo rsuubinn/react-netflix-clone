@@ -12,6 +12,7 @@ export interface ITvDetail {
   first_air_date: string;
   number_of_seasons: number;
   number_of_episodes: number;
+  genre_ids: [];
 }
 
 export interface IGetTvResults {
@@ -31,7 +32,23 @@ export async function getTvDetail(tvId: string) {
 export async function getOnTheAirTvPrograms() {
   return await (
     await fetch(
-      `${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=ko&page=1`
+      `${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+  ).json();
+}
+
+export async function getPopularTvPrograms() {
+  return await (
+    await fetch(
+      `${BASE_URL}/tv/popular?api_key=${API_KEY}&language=ko&page=1&region=kr`
+    )
+  ).json();
+}
+
+export async function getTopRatedTvPrograms() {
+  return await (
+    await fetch(
+      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }

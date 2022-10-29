@@ -5,7 +5,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useEffect, useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath, TvTypes } from "../../utils";
-import { IGetTvResults } from "../../apis/tvApi";
+import { IGetTvResults } from "../../apis/tvApis";
 import TvDetail from "./TvDetail";
 
 const Slider = styled.div`
@@ -152,7 +152,6 @@ function TvSlider({ data, type }: ISlider) {
   const [index, setIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
   const [sliderTitle, setSliderTitle] = useState("");
-  console.log(tvMatch);
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -183,6 +182,12 @@ function TvSlider({ data, type }: ISlider) {
     switch (type) {
       case "on_the_air":
         setSliderTitle("방영중인 티비 프로그램");
+        break;
+      case "top_rated":
+        setSliderTitle("평점높은 티비 프로그램");
+        break;
+      case "popular":
+        setSliderTitle("인기있는 티비 프로그램");
         break;
     }
   }, [type]);

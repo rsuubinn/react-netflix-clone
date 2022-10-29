@@ -2,9 +2,9 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { makeImagePath, makeRuntime } from "../../utils";
+import { makeImagePath } from "../../utils";
 import StarIcon from "@mui/icons-material/Star";
-import { getTvDetail, ITvDetail } from "../../apis/tvApi";
+import { getTvDetail, ITvDetail } from "../../apis/tvApis";
 
 const Overlay = styled(motion.div)`
   width: 100%;
@@ -56,7 +56,17 @@ const Overview = styled.p`
   line-height: 1.3;
 `;
 
-const Runtime = styled.div``;
+const Seasons = styled.div`
+  margin-right: 10px;
+  span {
+    margin-right: 5px;
+  }
+`;
+const Episode = styled.div`
+  span {
+    margin-right: 5px;
+  }
+`;
 
 const FlexBox = styled.div`
   display: flex;
@@ -162,11 +172,21 @@ function TvDetail({ type, tvId }: ITvDetailProps) {
                       <ReleaseDate>
                         {tvData.first_air_date.split("-", 1)}
                       </ReleaseDate>
+                      <Seasons>
+                        <span>시즌</span>
+                        {tvData.number_of_seasons}개
+                      </Seasons>
+                      <Episode>
+                        <span>에피소드</span>
+                        {tvData.number_of_episodes}개
+                      </Episode>
                     </div>
                     <div>
                       <Vote>
                         <StarIcon></StarIcon>
-                        {tvData.vote_average.toFixed(1)}
+                        {tvData.vote_average === 0
+                          ? "정보 없음"
+                          : tvData.vote_average.toFixed(1)}
                       </Vote>
                     </div>
                   </FlexBox>
@@ -176,11 +196,13 @@ function TvDetail({ type, tvId }: ITvDetailProps) {
 
                   <Genres>
                     <span>장르: </span>
-                    {tvData.genres.map((genre) => (
-                      <Genre key={type + genre.id}>
-                        {genre.name ? genre.name : "정보 없음"}
-                      </Genre>
-                    ))}
+                    {tvData.genres ? (
+                      tvData.genres.map((genre) => (
+                        <Genre key={type + genre.id}>{genre.name}</Genre>
+                      ))
+                    ) : (
+                      <span>정보 없음</span>
+                    )}
                   </Genres>
                 </Detail>
               </TvBox>

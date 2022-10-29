@@ -162,18 +162,24 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                       <ReleaseDate>
                         {movieData.release_date.split("-", 1)}
                       </ReleaseDate>
-                      {movieData.runtime && (
+                      {movieData.runtime ? (
                         <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+                      ) : (
+                        <span>정보 없음</span>
                       )}
                     </div>
                     <div>
                       <Vote>
                         <StarIcon></StarIcon>
-                        {movieData.vote_average.toFixed(1)}
+                        {movieData.vote_average === 0
+                          ? "정보 없음"
+                          : movieData.vote_average.toFixed(1)}
                       </Vote>
                     </div>
                   </FlexBox>
-                  <Overview>{movieData.overview}</Overview>
+                  <Overview>
+                    {movieData.overview ? movieData.overview : "정보 없음"}
+                  </Overview>
 
                   <Genres>
                     <span>장르: </span>
