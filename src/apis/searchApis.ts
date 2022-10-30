@@ -2,16 +2,9 @@ const API_KEY = "9c9934e5f1d2067a566e93eede75e49e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export interface ISearch {
-  backdrop_path: string;
   id: number;
-  media_type: string;
-  original_name: string;
-  overview: string;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  vote_average: number;
-  genres_ids: [{ id: number; name: string }];
+  title?: string;
+  name?: string;
 }
 
 export interface IGetSearchResults {

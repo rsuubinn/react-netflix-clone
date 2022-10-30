@@ -13,6 +13,7 @@ const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   opacity: 0;
+  z-index: 1;
 `;
 
 const Loader = styled.div``;
@@ -20,6 +21,7 @@ const Loader = styled.div``;
 const Wrapper = styled.div``;
 
 const TvBox = styled(motion.div)`
+  z-index: 1;
   width: 50vw;
   height: 80vh;
   position: absolute;
@@ -137,7 +139,7 @@ function TvDetail({ type, tvId }: ITvDetailProps) {
   );
 
   const onOverlayClicked = () => {
-    navigate("/tv");
+    navigate(-1);
   };
   return (
     <AnimatePresence>

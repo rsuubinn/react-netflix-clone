@@ -15,8 +15,38 @@ import { MovieTypes, TvTypes } from "../utils";
 
 const Loader = styled.div``;
 
+const RelatedContents = styled.div`
+  margin: 15vh 60px 0px 60px;
+  display: flex;
+  align-items: flex-start;
+
+  h4 {
+    color: gray;
+    font-weight: 600;
+    width: 35%;
+    padding-top: 9px;
+  }
+`;
+const Contents = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const Content = styled.div`
+  color: white;
+  display: flex;
+  align-items: center;
+  span {
+    display: block;
+    color: gray;
+    font-size: 30px;
+    margin: 0px 10px;
+  }
+`;
+
 const Sliders = styled.div`
-  margin: 25vh 0;
+  margin: 5vh 0;
+  z-index: 0;
 `;
 
 function Search() {
@@ -32,16 +62,29 @@ function Search() {
     ["tv", "search"],
     () => getTvSearch(keyword!)
   );
-  console.log(movieData);
+
   return (
     <>
       {searchLoading && movieLoading && tvLoading ? (
         <Loader>loading...</Loader>
       ) : (
-        <Sliders>
-          <MovieSlider type={MovieTypes.search} data={movieData!} />
-          <TvSlider type={TvTypes.search} data={tvData!} />
-        </Sliders>
+        <>
+          <RelatedContents>
+            <h4>다음과 관련된 콘텐츠: </h4>
+            <Contents>
+              {searchData?.results.map((data) => (
+                <Content key={data.id}>
+                  {data.title ? data.title : data.name}
+                  <span>|</span>
+                </Content>
+              ))}
+            </Contents>
+          </RelatedContents>
+          <Sliders>
+            <MovieSlider type={MovieTypes.search} data={movieData!} />
+            <TvSlider type={TvTypes.search} data={tvData!} />
+          </Sliders>
+        </>
       )}
     </>
   );
