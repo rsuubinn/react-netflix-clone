@@ -13,16 +13,11 @@ import InfoIcon from "@mui/icons-material/Info";
 import { AnimatePresence } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import MovieDetail from "../Components/Movies/MovieDetail";
+import Loader from "../Components/Loader";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const Wrapper = styled.div`
   background-color: black;
-`;
-
-const Loader = styled.div`
-  height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 const Banner = styled.div<{ imagepath: string }>`
@@ -83,49 +78,58 @@ function Home() {
     navigate(`/movies/${movieId}`);
   }
   return (
-    <Wrapper>
-      {nowPlayingLoading &&
-      popularLoading &&
-      topRatedLoading &&
-      upComingLoading ? (
-        <Loader>Loading...</Loader>
-      ) : (
-        <>
-          <Banner
-            imagepath={makeImagePath(
-              nowPlayingMovieData?.results[0].backdrop_path || ""
-            )}
-          >
-            <Title>{nowPlayingMovieData?.results[0].title}</Title>
-            <Overview>{nowPlayingMovieData?.results[0].overview}</Overview>
-            <Detail
-              onClick={() =>
-                onDetailBtnClick(nowPlayingMovieData?.results[0].id!)
-              }
+    <>
+      <HelmetProvider>
+        <Helmet>
+          <title>홈 - 넷플릭스</title>
+        </Helmet>
+      </HelmetProvider>
+      <Wrapper>
+        {nowPlayingLoading &&
+        popularLoading &&
+        topRatedLoading &&
+        upComingLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Banner
+              imagepath={makeImagePath(
+                nowPlayingMovieData?.results[0].backdrop_path || ""
+              )}
             >
-              <InfoIcon /> 상세 정보
-            </Detail>
-          </Banner>
+              <Title>{nowPlayingMovieData?.results[0].title}</Title>
+              <Overview>{nowPlayingMovieData?.results[0].overview}</Overview>
+              <Detail
+                onClick={() =>
+                  onDetailBtnClick(nowPlayingMovieData?.results[0].id!)
+                }
+              >
+                <InfoIcon /> 상세 정보
+              </Detail>
+            </Banner>
+            <MovieSlider
+              type={MovieTypes.now_playing}
+              data={nowPlayingMovieData!}
+            />
+            <MovieSlider type={MovieTypes.popular} data={popularMovieData!} />
+            <MovieSlider
+              type={MovieTypes.top_rated}
+              data={topRatedMovieData!}
+            />
+            <MovieSlider type={MovieTypes.upcoming} data={upComingMovieData!} />
+          </>
+        )}
 
-          <MovieSlider
-            type={MovieTypes.now_playing}
-            data={nowPlayingMovieData!}
-          />
-          <MovieSlider type={MovieTypes.popular} data={popularMovieData!} />
-          <MovieSlider type={MovieTypes.top_rated} data={topRatedMovieData!} />
-          <MovieSlider type={MovieTypes.upcoming} data={upComingMovieData!} />
-        </>
-      )}
-
-      <AnimatePresence>
-        {movieMatch ? (
-          <MovieDetail
-            movieId={movieMatch.params.movieId!}
-            type={MovieTypes.now_playing}
-          />
-        ) : null}
-      </AnimatePresence>
-    </Wrapper>
+        <AnimatePresence>
+          {movieMatch ? (
+            <MovieDetail
+              movieId={movieMatch.params.movieId!}
+              type={MovieTypes.now_playing}
+            />
+          ) : null}
+        </AnimatePresence>
+      </Wrapper>
+    </>
   );
 }
 

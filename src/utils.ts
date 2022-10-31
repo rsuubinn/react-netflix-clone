@@ -2,6 +2,10 @@ export function makeImagePath(id: string, format?: string) {
   return `https://image.tmdb.org/t/p/${format ? format : "original"}${id}`;
 }
 
+export function makteTrailerPath(key?: string) {
+  return `https://www.youtube.com/embed/${key}?showinfo=0&enablejsapi=1&origin=http://localhost:3000`;
+}
+
 export function makeRuntime(runtime: number) {
   if (runtime / 60 === 0) {
     return `${runtime}분}`;

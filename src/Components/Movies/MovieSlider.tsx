@@ -123,13 +123,13 @@ const infoVariants = {
 
 const rowVariants = {
   hidden: (reverse: boolean) => ({
-    x: reverse ? -window.innerWidth : window.innerWidth,
+    x: reverse ? window.innerWidth : -window.innerWidth,
   }),
   visible: {
     x: 0,
   },
   exit: (reverse: boolean) => ({
-    x: reverse ? window.innerWidth : -window.innerWidth,
+    x: reverse ? -window.innerWidth : window.innerWidth,
   }),
 };
 
@@ -155,24 +155,27 @@ function MovieSlider({ data, type }: ISlider) {
   const [sliderTitle, setSliderTitle] = useState("");
   const [isSearch, setIsSearch] = useState(false);
 
+  const totalMovies = data?.results.length - 1;
+  const maxIndex = Math.floor(totalMovies / offset) - 1;
+
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
-      toggleLeaving();
-      const totalMovies = data?.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-      setReverse(false);
+      else {
+        setReverse(() => false);
+        toggleLeaving();
+        setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+      }
     }
   };
   const decreaseIndex = () => {
     if (data) {
       if (leaving) return;
-      toggleLeaving();
-      const totalMovies = data?.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-      setReverse(true);
+      else {
+        setReverse(() => true);
+        toggleLeaving();
+        setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+      }
     }
   };
   const toggleLeaving = () => {

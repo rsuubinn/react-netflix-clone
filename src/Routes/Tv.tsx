@@ -12,16 +12,11 @@ import { makeImagePath, TvTypes } from "../utils";
 import InfoIcon from "@mui/icons-material/Info";
 import { AnimatePresence } from "framer-motion";
 import TvDetail from "../Components/Tv/TvDetail";
+import Loader from "../Components/Loader";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const Wrapper = styled.div`
   background-color: black;
-`;
-
-const Loader = styled.div`
-  height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 const Banner = styled.div<{ imagepath: string }>`
@@ -80,36 +75,43 @@ function Tv() {
   }
   const tvMatch = useMatch("/tv/:tvId");
   return (
-    <Wrapper>
-      {onTheAirLoading && topRatedLoading && popularLoading ? (
-        <Loader>Loading...</Loader>
-      ) : (
-        <>
-          <Banner
-            imagepath={makeImagePath(
-              onTheAirTvData?.results[0].backdrop_path || ""
-            )}
-          >
-            <Title>{onTheAirTvData?.results[0].name}</Title>
-            <Overview>{onTheAirTvData?.results[0].overview}</Overview>
-            <Detail
-              onClick={() => onDetailBtnClick(onTheAirTvData?.results[0].id!)}
+    <>
+      <HelmetProvider>
+        <Helmet>
+          <title>시리즈 - 넷플릭스</title>
+        </Helmet>
+      </HelmetProvider>
+      <Wrapper>
+        {onTheAirLoading && topRatedLoading && popularLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Banner
+              imagepath={makeImagePath(
+                onTheAirTvData?.results[0].backdrop_path || ""
+              )}
             >
-              <InfoIcon /> 상세 정보
-            </Detail>
-          </Banner>
+              <Title>{onTheAirTvData?.results[0].name}</Title>
+              <Overview>{onTheAirTvData?.results[0].overview}</Overview>
+              <Detail
+                onClick={() => onDetailBtnClick(onTheAirTvData?.results[0].id!)}
+              >
+                <InfoIcon /> 상세 정보
+              </Detail>
+            </Banner>
 
-          <TvSlider data={onTheAirTvData!} type={TvTypes.on_the_air} />
-          <TvSlider data={topRatedTvData!} type={TvTypes.top_rated} />
-          <TvSlider data={popularTvData!} type={TvTypes.popular} />
-        </>
-      )}
-      <AnimatePresence>
-        {tvMatch ? (
-          <TvDetail tvId={tvMatch.params.tvId!} type={TvTypes.on_the_air} />
-        ) : null}
-      </AnimatePresence>
-    </Wrapper>
+            <TvSlider data={onTheAirTvData!} type={TvTypes.on_the_air} />
+            <TvSlider data={topRatedTvData!} type={TvTypes.top_rated} />
+            <TvSlider data={popularTvData!} type={TvTypes.popular} />
+          </>
+        )}
+        <AnimatePresence>
+          {tvMatch ? (
+            <TvDetail tvId={tvMatch.params.tvId!} type={TvTypes.on_the_air} />
+          ) : null}
+        </AnimatePresence>
+      </Wrapper>
+    </>
   );
 }
 

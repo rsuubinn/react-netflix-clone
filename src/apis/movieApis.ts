@@ -11,6 +11,7 @@ export interface IMovieDetail {
   genres: [{ id: number; name: string }];
   runtime?: number;
   release_date: string;
+  homepage: string;
 }
 
 export interface IGetMoviesResults {
@@ -18,6 +19,14 @@ export interface IGetMoviesResults {
   results: IMovieDetail[];
   total_pages: number;
   total_results: number;
+}
+
+export interface IMovieTrailerDetail {
+  key: string;
+}
+export interface IGetTrailerMoviesResults {
+  id: number;
+  results: IMovieTrailerDetail[];
 }
 
 export async function getMovieDetail(id: string) {
@@ -55,5 +64,11 @@ export async function getUpcomingMovies() {
     await fetch(
       `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko&page=1&region=kr`
     )
+  ).json();
+}
+
+export async function getTrailerMovies(movieId: string) {
+  return await (
+    await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`)
   ).json();
 }

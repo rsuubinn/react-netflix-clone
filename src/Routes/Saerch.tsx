@@ -9,11 +9,11 @@ import {
   IGetSearchResults,
 } from "../apis/searchApis";
 import { IGetTvResults } from "../apis/tvApis";
+import Loader from "../Components/Loader";
 import MovieSlider from "../Components/Movies/MovieSlider";
 import TvSlider from "../Components/Tv/TvSlider";
 import { MovieTypes, TvTypes } from "../utils";
-
-const Loader = styled.div``;
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const RelatedContents = styled.div`
   margin: 15vh 60px 0px 60px;
@@ -23,11 +23,12 @@ const RelatedContents = styled.div`
   h4 {
     color: gray;
     font-weight: 600;
-    width: 35%;
+    width: 13%;
     padding-top: 9px;
   }
 `;
 const Contents = styled.div`
+  width: 80%;
   display: flex;
   flex-wrap: wrap;
 `;
@@ -65,8 +66,13 @@ function Search() {
 
   return (
     <>
+      <HelmetProvider>
+        <Helmet>
+          <title>넷플릭스</title>
+        </Helmet>
+      </HelmetProvider>
       {searchLoading && movieLoading && tvLoading ? (
-        <Loader>loading...</Loader>
+        <Loader />
       ) : (
         <>
           <RelatedContents>

@@ -5,18 +5,18 @@ import styled from "styled-components";
 import { makeImagePath } from "../../utils";
 import StarIcon from "@mui/icons-material/Star";
 import { getTvDetail, ITvDetail } from "../../apis/tvApis";
+import Loader from "../Loader";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const Overlay = styled(motion.div)`
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 0;
   opacity: 0;
   z-index: 1;
 `;
-
-const Loader = styled.div``;
 
 const Wrapper = styled.div``;
 
@@ -29,13 +29,13 @@ const TvBox = styled(motion.div)`
   right: 0;
   margin: 0 auto;
   border-radius: 15px;
-  overflow: hidden;
+  overflow-y: scroll;
   background-color: ${(props) => props.theme.black.darker};
 `;
 
 const Poster = styled.div<{ imagepath: string }>`
   width: 100%;
-  height: 50%;
+  height: 40%;
   background-size: cover;
   background-position: center center;
   background-image: linear-gradient(rgba(0, 0, 0, 0), #181818),
@@ -55,7 +55,7 @@ const Title = styled.h2`
 
 const Overview = styled.p`
   margin-bottom: 20px;
-  line-height: 1.3;
+  line-height: 1.5;
 `;
 
 const Seasons = styled.div`
@@ -147,6 +147,11 @@ function TvDetail({ type, tvId }: ITvDetailProps) {
         <Loader />
       ) : (
         <>
+          <HelmetProvider>
+            <Helmet>
+              <title>{tvData?.name} - 넷플릭스</title>
+            </Helmet>
+          </HelmetProvider>
           <Overlay
             onClick={onOverlayClicked}
             variants={overlayVariants}
