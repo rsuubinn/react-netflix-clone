@@ -8,11 +8,10 @@ export interface ITvDetail {
   name: string;
   overview: string;
   vote_average: number;
-  genres: [{ id: number; name: string }];
+  genres?: [{ id: number; name: string }];
   first_air_date: string;
   number_of_seasons: number;
   number_of_episodes: number;
-  genre_ids: [];
 }
 
 export interface IGetTvResults {
@@ -22,6 +21,13 @@ export interface IGetTvResults {
   total_results: number;
 }
 
+export interface ITvTrailerDetail {
+  key: string;
+}
+export interface IGetTrailerTvResults {
+  id: number;
+  results: ITvTrailerDetail[];
+}
 export async function getTvDetail(tvId: string) {
   return await (
     await fetch(`
@@ -50,5 +56,11 @@ export async function getTopRatedTvPrograms() {
     await fetch(
       `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko&page=1&region=kr`
     )
+  ).json();
+}
+
+export async function getTrailerTv(tvId: string) {
+  return await (
+    await fetch(`${BASE_URL}/tv/${tvId}/videos?api_key=${API_KEY}`)
   ).json();
 }

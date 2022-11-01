@@ -8,7 +8,7 @@ export interface IMovieDetail {
   title: string;
   overview: string;
   vote_average: number;
-  genres: [{ id: number; name: string }];
+  genres?: [{ id: number; name: string }];
   runtime?: number;
   release_date: string;
   homepage: string;

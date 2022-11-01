@@ -127,7 +127,7 @@ const Video = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 20px 0px;
 `;
 
 const overlayVariants = {
@@ -164,7 +164,6 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
     ["movies", "trailer"],
     () => getTrailerMovies(movieId)
   );
-  console.log(movieTrailerData?.results[0].key);
   const onOverlayClicked = () => {
     navigate(-1);
   };
@@ -230,13 +229,17 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
 
                   <Genres>
                     <span>장르: </span>
-                    {movieData.genres.map((genre) => (
-                      <Genre key={type + genre.id}>{genre.name}</Genre>
-                    ))}
+                    {movieData.genres ? (
+                      movieData.genres.map((genre) => (
+                        <Genre key={type + genre.id}>{genre.name}</Genre>
+                      ))
+                    ) : (
+                      <span>정보 없음</span>
+                    )}
                   </Genres>
                 </Detail>
-                <Video>
-                  {movieTrailerData?.results[0].key === undefined ? null : (
+                {movieTrailerData?.results[0] ? (
+                  <Video>
                     <ReactPlayer
                       url={makteTrailerPath(movieTrailerData?.results[0].key)}
                       playing={false}
@@ -244,8 +247,8 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                       width="600px"
                       height="500px"
                     ></ReactPlayer>
-                  )}
-                </Video>
+                  </Video>
+                ) : null}
               </MovieBox>
             </Wrapper>
           ) : null}

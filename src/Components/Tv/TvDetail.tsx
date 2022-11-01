@@ -2,12 +2,18 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { makeImagePath } from "../../utils";
+import { makeImagePath, makteTrailerPath } from "../../utils";
 import StarIcon from "@mui/icons-material/Star";
 import ClearIcon from "@mui/icons-material/Clear";
-import { getTvDetail, ITvDetail } from "../../apis/tvApis";
+import {
+  getTrailerTv,
+  getTvDetail,
+  IGetTrailerTvResults,
+  ITvDetail,
+} from "../../apis/tvApis";
 import Loader from "../Loader";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import ReactPlayer from "react-player";
 
 const Overlay = styled(motion.div)`
   width: 100%;
@@ -126,6 +132,13 @@ const Genre = styled.li`
   margin-right: 6px;
 `;
 
+const Video = styled.div`
+  margin: 20px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const overlayVariants = {
   hidden: {
     opacity: 0,
@@ -157,89 +170,107 @@ function TvDetail({ type, tvId }: ITvDetailProps) {
     () => getTvDetail(tvId)
   );
 
+  const { data: tvTrailerData } = useQuery<IGetTrailerTvResults>(
+    ["movies", "trailer"],
+    () => getTrailerTv(tvId)
+  );
+
   const onOverlayClicked = () => {
     navigate(-1);
   };
   return (
-    <AnimatePresence>
-      {tvLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <HelmetProvider>
-            <Helmet>
-              <title>{tvData?.name} - 넷플릭스</title>
-            </Helmet>
-          </HelmetProvider>
-          <Overlay
-            onClick={onOverlayClicked}
-            variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          />
-          {tvData ? (
-            <Wrapper key={type + tvData.id}>
-              <TvBox
-                style={{ top: scrollY.get() + 100 }}
-                variants={tvBoxVariants}
-              >
-                <Poster
-                  imagepath={makeImagePath(
-                    tvData.backdrop_path
-                      ? tvData.backdrop_path
-                      : tvData.poster_path
-                  )}
-                />
-                <Detail>
-                  <DeleteBtn onClick={onOverlayClicked}>
-                    <ClearIcon />
-                  </DeleteBtn>
-                  <Title>{tvData.name}</Title>
-                  <FlexBox>
-                    <div>
-                      <ReleaseDate>
-                        {tvData.first_air_date.split("-", 1)}
-                      </ReleaseDate>
-                      <Seasons>
-                        <span>시즌</span>
-                        {tvData.number_of_seasons}개
-                      </Seasons>
-                      <Episode>
-                        <span>에피소드</span>
-                        {tvData.number_of_episodes}개
-                      </Episode>
-                    </div>
-                    <div>
-                      <Vote>
-                        <StarIcon></StarIcon>
-                        {tvData.vote_average === 0
-                          ? "정보 없음"
-                          : tvData.vote_average.toFixed(1)}
-                      </Vote>
-                    </div>
-                  </FlexBox>
-                  <Overview>
-                    {tvData.overview ? tvData.overview : "정보 없음"}
-                  </Overview>
-
-                  <Genres>
-                    <span>장르: </span>
-                    {tvData.genres ? (
-                      tvData.genres.map((genre) => (
-                        <Genre key={type + genre.id}>{genre.name}</Genre>
-                      ))
-                    ) : (
-                      <span>정보 없음</span>
+    <>
+      <HelmetProvider>
+        <Helmet>
+          <title>{`${tvData?.name} - 넷플릭스`}</title>
+        </Helmet>
+      </HelmetProvider>
+      <AnimatePresence>
+        {tvLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Overlay
+              onClick={onOverlayClicked}
+              variants={overlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            />
+            {tvData ? (
+              <Wrapper key={type + tvData.id}>
+                <TvBox
+                  style={{ top: scrollY.get() + 100 }}
+                  variants={tvBoxVariants}
+                >
+                  <Poster
+                    imagepath={makeImagePath(
+                      tvData.backdrop_path
+                        ? tvData.backdrop_path
+                        : tvData.poster_path
                     )}
-                  </Genres>
-                </Detail>
-              </TvBox>
-            </Wrapper>
-          ) : null}
-        </>
-      )}
-    </AnimatePresence>
+                  />
+                  <Detail>
+                    <DeleteBtn onClick={onOverlayClicked}>
+                      <ClearIcon />
+                    </DeleteBtn>
+                    <Title>{tvData.name}</Title>
+                    <FlexBox>
+                      <div>
+                        <ReleaseDate>
+                          {tvData.first_air_date.split("-", 1)}
+                        </ReleaseDate>
+                        <Seasons>
+                          <span>시즌</span>
+                          {tvData.number_of_seasons}개
+                        </Seasons>
+                        <Episode>
+                          <span>에피소드</span>
+                          {tvData.number_of_episodes}개
+                        </Episode>
+                      </div>
+                      <div>
+                        <Vote>
+                          <StarIcon></StarIcon>
+                          {tvData.vote_average === 0
+                            ? "정보 없음"
+                            : tvData.vote_average.toFixed(1)}
+                        </Vote>
+                      </div>
+                    </FlexBox>
+                    <Overview>
+                      {tvData.overview ? tvData.overview : "정보 없음"}
+                    </Overview>
+
+                    <Genres>
+                      <span>장르: </span>
+                      {tvData.genres ? (
+                        tvData.genres.map((genre) => (
+                          <Genre key={type + genre.id}>{genre.name}</Genre>
+                        ))
+                      ) : (
+                        <span>정보 없음</span>
+                      )}
+                    </Genres>
+                  </Detail>
+                  {tvTrailerData?.results[0] ? (
+                    <Video>
+                      <ReactPlayer
+                        url={makteTrailerPath(tvTrailerData?.results[0].key)}
+                        playing={false}
+                        controls={false}
+                        width="600px"
+                        height="500px"
+                      ></ReactPlayer>
+                    </Video>
+                  ) : null}
+                </TvBox>
+              </Wrapper>
+            ) : null}
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
