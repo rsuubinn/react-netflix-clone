@@ -10,6 +10,7 @@ import {
 } from "../../apis/movieApis";
 import { makeImagePath, makeRuntime, makteTrailerPath } from "../../utils";
 import StarIcon from "@mui/icons-material/Star";
+import ClearIcon from "@mui/icons-material/Clear";
 import Loader from "../Loader";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import ReactPlayer from "react-player";
@@ -40,8 +41,9 @@ const MovieBox = styled(motion.div)`
 `;
 
 const Poster = styled.div<{ imagepath: string }>`
+  position: relative;
   width: 100%;
-  height: 40%;
+  height: 50%;
   background-size: cover;
   background-position: center center;
   background-image: linear-gradient(rgba(0, 0, 0, 0), #181818),
@@ -51,6 +53,23 @@ const Poster = styled.div<{ imagepath: string }>`
 const Detail = styled.div`
   color: ${(props) => props.theme.white.lighter};
   padding: 0px 20px;
+`;
+
+const DeleteBtn = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(50, 50, 50, 0.8);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    cursor: pointer;
+    font-size: 30px;
+  }
 `;
 
 const Title = styled.h2`
@@ -110,6 +129,7 @@ const Video = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
+
 const overlayVariants = {
   hidden: {
     opacity: 0,
@@ -140,10 +160,11 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
     ["movies", `${type}_detail`],
     () => getMovieDetail(movieId)
   );
-  const { data: movieTrailerData, isLoading: movieTrailerLoading } =
-    useQuery<IGetTrailerMoviesResults>(["movies", "trailer"], () =>
-      getTrailerMovies(movieId)
-    );
+  const { data: movieTrailerData } = useQuery<IGetTrailerMoviesResults>(
+    ["movies", "trailer"],
+    () => getTrailerMovies(movieId)
+  );
+  console.log(movieTrailerData?.results[0].key);
   const onOverlayClicked = () => {
     navigate(-1);
   };
@@ -179,6 +200,9 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                   )}
                 />
                 <Detail>
+                  <DeleteBtn onClick={onOverlayClicked}>
+                    <ClearIcon />
+                  </DeleteBtn>
                   <Title>{movieData.title}</Title>
                   <FlexBox>
                     <div>
@@ -212,7 +236,7 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                   </Genres>
                 </Detail>
                 <Video>
-                  {movieTrailerData ? (
+                  {movieTrailerData?.results[0].key === undefined ? null : (
                     <ReactPlayer
                       url={makteTrailerPath(movieTrailerData?.results[0].key)}
                       playing={false}
@@ -220,7 +244,7 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
                       width="600px"
                       height="500px"
                     ></ReactPlayer>
-                  ) : null}
+                  )}
                 </Video>
               </MovieBox>
             </Wrapper>

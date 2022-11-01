@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../../utils";
 import StarIcon from "@mui/icons-material/Star";
+import ClearIcon from "@mui/icons-material/Clear";
 import { getTvDetail, ITvDetail } from "../../apis/tvApis";
 import Loader from "../Loader";
 import { Helmet, HelmetProvider } from "react-helmet-async";
@@ -34,6 +35,7 @@ const TvBox = styled(motion.div)`
 `;
 
 const Poster = styled.div<{ imagepath: string }>`
+  position: relative;
   width: 100%;
   height: 40%;
   background-size: cover;
@@ -45,6 +47,23 @@ const Poster = styled.div<{ imagepath: string }>`
 const Detail = styled.div`
   color: ${(props) => props.theme.white.lighter};
   padding: 0px 20px;
+`;
+
+const DeleteBtn = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(50, 50, 50, 0.8);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    cursor: pointer;
+    font-size: 30px;
+  }
 `;
 
 const Title = styled.h2`
@@ -173,6 +192,9 @@ function TvDetail({ type, tvId }: ITvDetailProps) {
                   )}
                 />
                 <Detail>
+                  <DeleteBtn onClick={onOverlayClicked}>
+                    <ClearIcon />
+                  </DeleteBtn>
                   <Title>{tvData.name}</Title>
                   <FlexBox>
                     <div>

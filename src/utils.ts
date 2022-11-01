@@ -3,7 +3,7 @@ export function makeImagePath(id: string, format?: string) {
 }
 
 export function makteTrailerPath(key?: string) {
-  return `https://www.youtube.com/embed/${key}?showinfo=0&enablejsapi=1&origin=http://localhost:3000`;
+  return `https://www.youtube.com/embed/${key}?showinfo=0&enablejsapi=1&origin=https://localhost:3000`;
 }
 
 export function makeRuntime(runtime: number) {
