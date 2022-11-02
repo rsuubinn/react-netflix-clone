@@ -122,14 +122,14 @@ const infoVariants = {
 };
 
 const rowVariants = {
-  hidden: (reverse: boolean) => ({
-    x: reverse ? window.innerWidth : -window.innerWidth,
+  hidden: ({ reverse }: ICustomProps) => ({
+    x: reverse ? -window.innerWidth : window.innerWidth,
   }),
   visible: {
     x: 0,
   },
-  exit: (reverse: boolean) => ({
-    x: reverse ? -window.innerWidth : window.innerWidth,
+  exit: ({ reverse }: ICustomProps) => ({
+    x: reverse ? window.innerWidth : -window.innerWidth,
   }),
 };
 
@@ -143,6 +143,10 @@ const offset = 6;
 interface ISlider {
   data: IGetTvResults;
   type: TvTypes;
+}
+
+interface ICustomProps {
+  reverse: boolean;
 }
 
 function TvSlider({ data, type }: ISlider) {
@@ -162,7 +166,7 @@ function TvSlider({ data, type }: ISlider) {
     if (data) {
       if (leaving) return;
       else {
-        setReverse(() => false);
+        setReverse(false);
         toggleLeaving();
         setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
       }
@@ -172,7 +176,7 @@ function TvSlider({ data, type }: ISlider) {
     if (data) {
       if (leaving) return;
       else {
-        setReverse(() => true);
+        setReverse(true);
         toggleLeaving();
         setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
       }
@@ -212,7 +216,7 @@ function TvSlider({ data, type }: ISlider) {
           <Slider>
             <SliderTitle>{sliderTitle}</SliderTitle>
             <AnimatePresence
-              custom={reverse}
+              custom={{ reverse }}
               initial={false}
               onExitComplete={toggleLeaving}
             >
@@ -223,7 +227,7 @@ function TvSlider({ data, type }: ISlider) {
                 animate="visible"
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
-                custom={reverse}
+                custom={{ reverse }}
               >
                 {data?.results
                   .slice(1)
@@ -252,7 +256,7 @@ function TvSlider({ data, type }: ISlider) {
               initial="normal"
               whileHover="hover"
               onClick={decreaseIndex}
-              custom={reverse}
+              custom={{ reverse }}
             >
               <NavigateBeforeIcon />
             </LeftButton>
@@ -261,7 +265,7 @@ function TvSlider({ data, type }: ISlider) {
               initial="normal"
               whileHover="hover"
               onClick={increaseIndex}
-              custom={reverse}
+              custom={{ reverse }}
             >
               <NavigateNextIcon />
             </RightButton>

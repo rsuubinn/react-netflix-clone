@@ -122,13 +122,13 @@ const infoVariants = {
 };
 
 const rowVariants = {
-  hidden: (reverse: boolean) => ({
+  hidden: ({ reverse }: ICustomProps) => ({
     x: reverse ? window.innerWidth : -window.innerWidth,
   }),
   visible: {
     x: 0,
   },
-  exit: (reverse: boolean) => ({
+  exit: ({ reverse }: ICustomProps) => ({
     x: reverse ? -window.innerWidth : window.innerWidth,
   }),
 };
@@ -143,6 +143,10 @@ const offset = 6;
 interface ISlider {
   data: IGetMoviesResults;
   type: MovieTypes;
+}
+
+interface ICustomProps {
+  reverse: boolean;
 }
 
 function MovieSlider({ data, type }: ISlider) {
@@ -162,9 +166,9 @@ function MovieSlider({ data, type }: ISlider) {
     if (data) {
       if (leaving) return;
       else {
-        setReverse(() => false);
         toggleLeaving();
         setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+        setReverse(() => false);
       }
     }
   };
@@ -172,9 +176,9 @@ function MovieSlider({ data, type }: ISlider) {
     if (data) {
       if (leaving) return;
       else {
-        setReverse(() => true);
         toggleLeaving();
         setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+        setReverse(() => true);
       }
     }
   };
@@ -215,7 +219,7 @@ function MovieSlider({ data, type }: ISlider) {
           <Slider>
             <SliderTitle>{sliderTitle}</SliderTitle>
             <AnimatePresence
-              custom={reverse}
+              custom={{ reverse }}
               initial={false}
               onExitComplete={toggleLeaving}
             >
@@ -226,7 +230,7 @@ function MovieSlider({ data, type }: ISlider) {
                 animate="visible"
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
-                custom={reverse}
+                custom={{ reverse }}
               >
                 {data?.results
                   .slice(1)
@@ -255,7 +259,7 @@ function MovieSlider({ data, type }: ISlider) {
               initial="normal"
               whileHover="hover"
               onClick={decreaseIndex}
-              custom={reverse}
+              custom={{ reverse }}
             >
               <NavigateBeforeIcon />
             </LeftButton>
@@ -264,7 +268,7 @@ function MovieSlider({ data, type }: ISlider) {
               initial="normal"
               whileHover="hover"
               onClick={increaseIndex}
-              custom={reverse}
+              custom={{ reverse }}
             >
               <NavigateNextIcon />
             </RightButton>

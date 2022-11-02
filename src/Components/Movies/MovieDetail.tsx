@@ -168,93 +168,95 @@ function MovieDetail({ type, movieId }: IMovieDetailProps) {
     navigate(-1);
   };
   return (
-    <AnimatePresence>
-      {movieLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <HelmetProvider>
-            <Helmet>
-              <title>{movieData?.title} - 넷플릭스</title>
-            </Helmet>
-          </HelmetProvider>
-          <Overlay
-            onClick={onOverlayClicked}
-            variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          />
-          {movieData ? (
-            <Wrapper key={type + movieData.id}>
-              <MovieBox
-                style={{ top: scrollY.get() + 100 }}
-                variants={movieBoxVariants}
-              >
-                <Poster
-                  imagepath={makeImagePath(
-                    movieData.backdrop_path
-                      ? movieData.backdrop_path
-                      : movieData.poster_path
-                  )}
-                />
-                <Detail>
-                  <DeleteBtn onClick={onOverlayClicked}>
-                    <ClearIcon />
-                  </DeleteBtn>
-                  <Title>{movieData.title}</Title>
-                  <FlexBox>
-                    <div>
-                      <ReleaseDate>
-                        {movieData.release_date.split("-", 1)}
-                      </ReleaseDate>
-                      {movieData.runtime ? (
-                        <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+    <>
+      <HelmetProvider>
+        <Helmet>
+          <title>{`${movieData?.title} - 넷플릭스`}</title>
+        </Helmet>
+      </HelmetProvider>
+      <AnimatePresence>
+        {movieLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Overlay
+              onClick={onOverlayClicked}
+              variants={overlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            />
+            {movieData ? (
+              <Wrapper key={type + movieData.id}>
+                <MovieBox
+                  style={{ top: scrollY.get() + 100 }}
+                  variants={movieBoxVariants}
+                >
+                  <Poster
+                    imagepath={makeImagePath(
+                      movieData.backdrop_path
+                        ? movieData.backdrop_path
+                        : movieData.poster_path
+                    )}
+                  />
+                  <Detail>
+                    <DeleteBtn onClick={onOverlayClicked}>
+                      <ClearIcon />
+                    </DeleteBtn>
+                    <Title>{movieData.title}</Title>
+                    <FlexBox>
+                      <div>
+                        <ReleaseDate>
+                          {movieData.release_date.split("-", 1)}
+                        </ReleaseDate>
+                        {movieData.runtime ? (
+                          <Runtime>{makeRuntime(movieData.runtime)}</Runtime>
+                        ) : (
+                          <span>정보 없음</span>
+                        )}
+                      </div>
+                      <div>
+                        <Vote>
+                          <StarIcon></StarIcon>
+                          {movieData.vote_average === 0
+                            ? "정보 없음"
+                            : movieData.vote_average.toFixed(1)}
+                        </Vote>
+                      </div>
+                    </FlexBox>
+                    <Overview>
+                      {movieData.overview ? movieData.overview : "정보 없음"}
+                    </Overview>
+
+                    <Genres>
+                      <span>장르: </span>
+                      {movieData.genres ? (
+                        movieData.genres.map((genre) => (
+                          <Genre key={type + genre.id}>{genre.name}</Genre>
+                        ))
                       ) : (
                         <span>정보 없음</span>
                       )}
-                    </div>
-                    <div>
-                      <Vote>
-                        <StarIcon></StarIcon>
-                        {movieData.vote_average === 0
-                          ? "정보 없음"
-                          : movieData.vote_average.toFixed(1)}
-                      </Vote>
-                    </div>
-                  </FlexBox>
-                  <Overview>
-                    {movieData.overview ? movieData.overview : "정보 없음"}
-                  </Overview>
-
-                  <Genres>
-                    <span>장르: </span>
-                    {movieData.genres ? (
-                      movieData.genres.map((genre) => (
-                        <Genre key={type + genre.id}>{genre.name}</Genre>
-                      ))
-                    ) : (
-                      <span>정보 없음</span>
-                    )}
-                  </Genres>
-                </Detail>
-                {movieTrailerData?.results[0] ? (
-                  <Video>
-                    <ReactPlayer
-                      url={makteTrailerPath(movieTrailerData?.results[0].key)}
-                      playing={false}
-                      controls={false}
-                      width="600px"
-                      height="500px"
-                    ></ReactPlayer>
-                  </Video>
-                ) : null}
-              </MovieBox>
-            </Wrapper>
-          ) : null}
-        </>
-      )}
-    </AnimatePresence>
+                    </Genres>
+                  </Detail>
+                  {movieTrailerData?.results[0] ? (
+                    <Video>
+                      <ReactPlayer
+                        url={makteTrailerPath(movieTrailerData?.results[0].key)}
+                        playing={false}
+                        controls={false}
+                        width="600px"
+                        height="500px"
+                      ></ReactPlayer>
+                    </Video>
+                  ) : null}
+                </MovieBox>
+              </Wrapper>
+            ) : null}
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

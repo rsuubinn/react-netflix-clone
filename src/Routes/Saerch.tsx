@@ -14,6 +14,7 @@ import MovieSlider from "../Components/Movies/MovieSlider";
 import TvSlider from "../Components/Tv/TvSlider";
 import { MovieTypes, TvTypes } from "../utils";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { useEffect } from "react";
 
 const RelatedContents = styled.div`
   margin: 15vh 60px 0px 60px;
@@ -63,6 +64,9 @@ function Search() {
     ["tv", "search"],
     () => getTvSearch(keyword!)
   );
+  useEffect(() => {
+    console.log(keyword);
+  }, [keyword]);
 
   return (
     <>
