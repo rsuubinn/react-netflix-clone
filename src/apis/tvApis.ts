@@ -1,4 +1,3 @@
-const API_KEY = "9c9934e5f1d2067a566e93eede75e49e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export interface ITvDetail {
@@ -31,14 +30,14 @@ export interface IGetTrailerTvResults {
 export async function getTvDetail(tvId: string) {
   return await (
     await fetch(`
-    ${BASE_URL}/tv/${tvId}?api_key=${API_KEY}&language=ko`)
+    ${BASE_URL}/tv/${tvId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko`)
   ).json();
 }
 
 export async function getOnTheAirTvPrograms() {
   return await (
     await fetch(
-      `${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/tv/on_the_air?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
@@ -46,7 +45,7 @@ export async function getOnTheAirTvPrograms() {
 export async function getPopularTvPrograms() {
   return await (
     await fetch(
-      `${BASE_URL}/tv/popular?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/tv/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
@@ -54,13 +53,15 @@ export async function getPopularTvPrograms() {
 export async function getTopRatedTvPrograms() {
   return await (
     await fetch(
-      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/tv/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
 
 export async function getTrailerTv(tvId: string) {
   return await (
-    await fetch(`${BASE_URL}/tv/${tvId}/videos?api_key=${API_KEY}`)
+    await fetch(
+      `${BASE_URL}/tv/${tvId}/videos?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
+    )
   ).json();
 }

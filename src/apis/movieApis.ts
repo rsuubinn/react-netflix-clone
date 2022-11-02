@@ -1,4 +1,3 @@
-const API_KEY = "9c9934e5f1d2067a566e93eede75e49e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export interface IMovieDetail {
@@ -31,14 +30,16 @@ export interface IGetTrailerMoviesResults {
 
 export async function getMovieDetail(id: string) {
   return await (
-    await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=ko`)
+    await fetch(
+      `${BASE_URL}/movie/${id}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko`
+    )
   ).json();
 }
 
 export async function getNowPlayingMovies() {
   return await (
     await fetch(
-      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
@@ -46,7 +47,7 @@ export async function getNowPlayingMovies() {
 export async function getPopularMovies() {
   return await (
     await fetch(
-      `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
@@ -54,7 +55,7 @@ export async function getPopularMovies() {
 export async function getTopRatedMovies() {
   return await (
     await fetch(
-      `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
@@ -62,13 +63,15 @@ export async function getTopRatedMovies() {
 export async function getUpcomingMovies() {
   return await (
     await fetch(
-      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko&page=1&region=kr`
+      `${BASE_URL}/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=ko&page=1&region=kr`
     )
   ).json();
 }
 
 export async function getTrailerMovies(movieId: string) {
   return await (
-    await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`)
+    await fetch(
+      `${BASE_URL}/movie/${movieId}/videos?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
+    )
   ).json();
 }
